@@ -1,7 +1,6 @@
 # Rohit Patil Portfolio Project
 
-## Overview
-This project is a modern, professional portfolio website for Rohit Patil, a Full Stack Web Developer. The site is designed to showcase skills, projects, education, experience, and contact information in a premium, responsive layout.
+#
 
 ## Tech Stack
 - Next.js 16
@@ -55,7 +54,7 @@ portfolio/
 - Experience
 - Contact
 
-## Deployment / Running
+## Running locally
 ```bash
 npm install
 npm run dev
@@ -64,6 +63,17 @@ Then open:
 ```text
 http://localhost:3000
 ```
+
+## Deploying to GitHub Pages
+
+The repository includes a GitHub Actions workflow that builds and deploys the static site when changes are pushed to `main`.
+
+1. Push the project to a GitHub repository named `rohit-patil-portfolio`.
+2. In that repository, open **Settings → Pages** and set the build and deployment source to **GitHub Actions**.
+3. Push to `main` (or run the **Deploy to GitHub Pages** workflow from the **Actions** tab).
+4. When the workflow succeeds, the site will be available at `https://rohit0177.github.io/rohit-patil-portfolio/`.
+
+GitHub Pages serves a static export. The contact form prepares an email in the visitor's email app; it does not require a server.
 
 ## Production Build
 ```bash
