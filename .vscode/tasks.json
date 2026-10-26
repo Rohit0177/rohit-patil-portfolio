@@ -1,0 +1,206 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Create Next portfolio and build",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const root=process.cwd();const html=fs.readFileSync(path.join(root,'index.html'),'utf8');const match=html.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/i);if(!match)throw new Error('Could not find portfolio body in index.html');const markup=match[1].replace(/\\bclass=/g,'className=').replace(/<span id=\"year\"><\\/span>/,'{new Date().getFullYear()}');fs.mkdirSync(path.join(root,'app'),{recursive:true});fs.writeFileSync(path.join(root,'app','page.tsx'),`\"use client\";\\n\\nimport { useEffect } from \"react\";\\n\\nexport default function Home() {\\n  useEffect(() => {\\n    const menuButton = document.querySelector<HTMLButtonElement>(\".menu-toggle\");\\n    const navLinks = document.querySelector<HTMLElement>(\".nav-links\");\\n    if (menuButton && navLinks) {\\n      const setMenuOpen = (isOpen: boolean) => {\\n        navLinks.classList.toggle(\"open\", isOpen);\\n        menuButton.setAttribute(\"aria-expanded\", String(isOpen));\\n        menuButton.setAttribute(\"aria-label\", isOpen ? \"Close navigation\" : \"Open navigation\");\\n      };\\n      menuButton.addEventListener(\"click\", () => setMenuOpen(menuButton.getAttribute(\"aria-expanded\") !== \"true\"));\\n      navLinks.querySelectorAll(\"a\").forEach((link) => link.addEventListener(\"click\", () => setMenuOpen(false)));\\n      document.addEventListener(\"keydown\", (event) => {\\n        if (event.key === \"Escape\" && menuButton.getAttribute(\"aria-expanded\") === \"true\") { setMenuOpen(false); menuButton.focus(); }\\n      });\\n    }\\n    const items = document.querySelectorAll(\".reveal\");\\n    if (\"IntersectionObserver\" in window && !window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) {\\n      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {\\n        if (entry.isIntersecting) { entry.target.classList.add(\"visible\"); observer.unobserve(entry.target); }\\n      }), { threshold: 0.12 });\\n      items.forEach((item) => observer.observe(item));\\n      return () => observer.disconnect();\\n    }\\n    items.forEach((item) => item.classList.add(\"visible\"));\\n  }, []);\\n\\n  return (\\n    <>\\n${markup}\\n    </>\\n  );\\n}\\n`);fs.writeFileSync(path.join(root,'app','layout.tsx'),`import type { Metadata } from \"next\";\\nimport \"./globals.css\";\\n\\nexport const metadata: Metadata = {\\n  title: \"Rohit Patil — Full Stack Web Developer\",\\n  description: \"Rohit Patil is a full stack web developer building thoughtful, responsive digital experiences.\",\\n};\\n\\nexport default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {\\n  return (\\n    <html lang=\"en\">\\n      <head>\\n        <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\\n        <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossOrigin=\"anonymous\" />\\n        <link href=\"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\" />\\n      </head>\\n      <body>{children}</body>\\n    </html>\\n  );\\n}\\n`);fs.copyFileSync(path.join(root,'style.css'),path.join(root,'app','globals.css'));for(const cmd of ['install','run build']){console.log('> npm '+cmd);const result=spawnSync('npm.cmd',['--no-audit','--no-fund',...cmd.split(' ')],{cwd:root,stdio:'inherit',shell:true});if(result.error)throw result.error;if(result.status!==0)process.exit(result.status||1);}"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Scaffold portfolio routes",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"const fs=require(\"fs\");const path=require(\"path\");const root=process.cwd();const html=fs.readFileSync(path.join(root,\"index.html\"),\"utf8\");const match=html.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/i);if(!match)throw new Error(\"Could not find portfolio body in index.html\");const markup=match[1].replace(/\\bclass=/g,\"className=\").replace(/<span id=\"year\"><\\/span>/,\"{new Date().getFullYear()}\");fs.mkdirSync(path.join(root,\"app\"),{recursive:true});fs.writeFileSync(path.join(root,\"app\",\"page.tsx\"),`\"use client\";\\n\\nimport { useEffect } from \"react\";\\n\\nexport default function Home() {\\n  useEffect(() => {\\n    const menuButton = document.querySelector<HTMLButtonElement>(\".menu-toggle\");\\n    const navLinks = document.querySelector<HTMLElement>(\".nav-links\");\\n    if (menuButton && navLinks) {\\n      const setMenuOpen = (isOpen: boolean) => {\\n        navLinks.classList.toggle(\"open\", isOpen);\\n        menuButton.setAttribute(\"aria-expanded\", String(isOpen));\\n        menuButton.setAttribute(\"aria-label\", isOpen ? \"Close navigation\" : \"Open navigation\");\\n      };\\n      menuButton.addEventListener(\"click\", () => setMenuOpen(menuButton.getAttribute(\"aria-expanded\") !== \"true\"));\\n      navLinks.querySelectorAll(\"a\").forEach((link) => link.addEventListener(\"click\", () => setMenuOpen(false)));\\n      document.addEventListener(\"keydown\", (event) => {\\n        if (event.key === \"Escape\" && menuButton.getAttribute(\"aria-expanded\") === \"true\") { setMenuOpen(false); menuButton.focus(); }\\n      });\\n    }\\n    const items = document.querySelectorAll(\".reveal\");\\n    if (\"IntersectionObserver\" in window && !window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) {\\n      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {\\n        if (entry.isIntersecting) { entry.target.classList.add(\"visible\"); observer.unobserve(entry.target); }\\n      }), { threshold: 0.12 });\\n      items.forEach((item) => observer.observe(item));\\n      return () => observer.disconnect();\\n    }\\n    items.forEach((item) => item.classList.add(\"visible\"));\\n  }, []);\\n\\n  return (\\n    <>\\n${markup}\\n    </>\\n  );\\n}\\n`);fs.writeFileSync(path.join(root,\"app\",\"layout.tsx\"),`import type { Metadata } from \"next\";\\nimport \"./globals.css\";\\n\\nexport const metadata: Metadata = {\\n  title: \"Rohit Patil — Full Stack Web Developer\",\\n  description: \"Rohit Patil is a full stack web developer building thoughtful, responsive digital experiences.\",\\n};\\n\\nexport default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {\\n  return (\\n    <html lang=\"en\">\\n      <head>\\n        <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\\n        <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossOrigin=\"anonymous\" />\\n        <link href=\"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\" />\\n      </head>\\n      <body>{children}</body>\\n    </html>\\n  );\\n}\\n`);fs.copyFileSync(path.join(root,\"style.css\"),path.join(root,\"app\",\"globals.css\"));"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check workspace file creation",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"require(\"fs\").mkdirSync(\"app\",{recursive:true});console.log(process.cwd())"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Probe Node command quoting",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'console.log(123)'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Generate Next portfolio app",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(\"fs\"),path=require(\"path\");const html=fs.readFileSync(\"index.html\",\"utf8\");const body=html.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/i)[1].replace(/\\bclass=/g,\"className=\").replace(/<span id=\"year\"><\\/span>/,\"{new Date().getFullYear()}\");fs.mkdirSync(\"app\",{recursive:true});fs.writeFileSync(\"app/page.tsx\",`\"use client\";\\nimport { useEffect } from \"react\";\\nexport default function Home(){useEffect(()=>{const button=document.querySelector<HTMLButtonElement>(\".menu-toggle\");const nav=document.querySelector<HTMLElement>(\".nav-links\");if(button&&nav){const close=()=>{nav.classList.remove(\"open\");button.setAttribute(\"aria-expanded\",\"false\");button.setAttribute(\"aria-label\",\"Open navigation\")};button.addEventListener(\"click\",()=>{const open=button.getAttribute(\"aria-expanded\")!==\"true\";nav.classList.toggle(\"open\",open);button.setAttribute(\"aria-expanded\",String(open));button.setAttribute(\"aria-label\",open?\"Close navigation\":\"Open navigation\")});nav.querySelectorAll(\"a\").forEach(link=>link.addEventListener(\"click\",close));document.addEventListener(\"keydown\",event=>{if(event.key===\"Escape\")close()})}const items=document.querySelectorAll(\".reveal\");if(\"IntersectionObserver\" in window&&!window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add(\"visible\");observer.unobserve(entry.target)}}),{threshold:.12});items.forEach(item=>observer.observe(item));return()=>observer.disconnect()}items.forEach(item=>item.classList.add(\"visible\"))},[]);return <>{body}</>}\\n`);fs.writeFileSync(\"app/layout.tsx\",`import type { Metadata } from \"next\";import \"./globals.css\";export const metadata:Metadata={title:\"Rohit Patil — Full Stack Web Developer\",description:\"Rohit Patil is a full stack web developer building thoughtful, responsive digital experiences.\"};export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang=\"en\"><head><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"/><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossOrigin=\"anonymous\"/><link href=\"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\"/></head><body>{children}</body></html>}`);fs.copyFileSync(\"style.css\",\"app/globals.css\");'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Probe Node argument escaping",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'console.log(`\"hello`\")'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Test escaped Node script",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'console.log(`\"hello`\");require(`\"fs\"`).mkdirSync(`\"app\"`,{recursive:true})'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Write Next portfolio pages",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(`\"fs\"`);const html=fs.readFileSync(`\"index.html\"`,`\"utf8\"`);const body=html.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/i)[1].replace(/\\bclass=/g,`\"className=\"`).replace(/<span id=.year.><\\/span>/,`\"{new Date().getFullYear()}\"`);fs.mkdirSync(`\"app\"`,{recursive:true});fs.writeFileSync(`\"app/page.tsx\"`,`\"use client\";\\nimport { useEffect } from `\"react\"`;\\nexport default function Home(){useEffect(()=>{const button=document.querySelector<HTMLButtonElement>(`\".menu-toggle\"`);const nav=document.querySelector<HTMLElement>(`\".nav-links\"`);if(button&&nav){const close=()=>{nav.classList.remove(`\"open\"`);button.setAttribute(`\"aria-expanded\"`,`\"false\"`);button.setAttribute(`\"aria-label\"`,`\"Open navigation\"`)};button.addEventListener(`\"click\"`,()=>{const open=button.getAttribute(`\"aria-expanded\"`)!==`\"true\"`;nav.classList.toggle(`\"open\"`,open);button.setAttribute(`\"aria-expanded\"`,String(open));button.setAttribute(`\"aria-label\"`,open?`\"Close navigation\"`:`\"Open navigation\"`)});nav.querySelectorAll(`\"a\"`).forEach(link=>link.addEventListener(`\"click\"`,close));document.addEventListener(`\"keydown\"`,event=>{if(event.key===`\"Escape\"`)close()})}const items=document.querySelectorAll(`\".reveal\"`);if(`\"IntersectionObserver\"` in window&&!window.matchMedia(`\"(prefers-reduced-motion: reduce)\"`).matches){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add(`\"visible\"`);observer.unobserve(entry.target)}}),{threshold:.12});items.forEach(item=>observer.observe(item));return()=>observer.disconnect()}items.forEach(item=>item.classList.add(`\"visible\"`))},[]);return <>{body}</>}\\n`);fs.writeFileSync(`\"app/layout.tsx\"`,`import type { Metadata } from `\"next\"`;import `\"./globals.css\"`;export const metadata:Metadata={title:`\"Rohit Patil — Full Stack Web Developer\"`,description:`\"Rohit Patil is a full stack web developer building thoughtful, responsive digital experiences.\"`};export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang={`\"en\"`}><head><link rel={`\"preconnect\"`} href={`\"https://fonts.googleapis.com\"`}/><link rel={`\"preconnect\"`} href={`\"https://fonts.gstatic.com\"`} crossOrigin={`\"anonymous\"`}/><link href={`\"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap\"`} rel={`\"stylesheet\"`}/></head><body>{children}</body></html>}`);fs.copyFileSync(`\"style.css\"`,`\"app/globals.css\"`);'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Probe cmd task syntax",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/c",
+				"node -e \"console.log(123)\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Probe cmd escaped arguments",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/c",
+				"node -e \"console.log(\\\"hello\\\")\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Scaffold Next portfolio",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(`fs`);const html=fs.readFileSync(`index.html`,`utf8`);const body=html.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/i)[1].replace(/\\bclass=/g,`className=`).replace(/<span id=.year.><\\/span>/,`{new Date().getFullYear()}`);fs.mkdirSync(`app`,{recursive:true});const page=`\\u0022use client\\u0022;\\nimport { useEffect } from \\u0022react\\u0022;\\nexport default function Home(){useEffect(()=>{const button=document.querySelector<HTMLButtonElement>(\\u0022.menu-toggle\\u0022);const nav=document.querySelector<HTMLElement>(\\u0022.nav-links\\u0022);if(button&&nav){const close=()=>{nav.classList.remove(\\u0022open\\u0022);button.setAttribute(\\u0022aria-expanded\\u0022,\\u0022false\\u0022);button.setAttribute(\\u0022aria-label\\u0022,\\u0022Open navigation\\u0022)};button.addEventListener(\\u0022click\\u0022,()=>{const open=button.getAttribute(\\u0022aria-expanded\\u0022)!==\\u0022true\\u0022;nav.classList.toggle(\\u0022open\\u0022,open);button.setAttribute(\\u0022aria-expanded\\u0022,String(open));button.setAttribute(\\u0022aria-label\\u0022,open?\\u0022Close navigation\\u0022:\\u0022Open navigation\\u0022)});nav.querySelectorAll(\\u0022a\\u0022).forEach(link=>link.addEventListener(\\u0022click\\u0022,close));document.addEventListener(\\u0022keydown\\u0022,event=>{if(event.key===\\u0022Escape\\u0022)close()})}const items=document.querySelectorAll(\\u0022.reveal\\u0022);if(\\u0022IntersectionObserver\\u0022 in window&&!window.matchMedia(\\u0022(prefers-reduced-motion: reduce)\\u0022).matches){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add(\\u0022visible\\u0022);observer.unobserve(entry.target)}}),{threshold:.12});items.forEach(item=>observer.observe(item));return()=>observer.disconnect()}items.forEach(item=>item.classList.add(\\u0022visible\\u0022))},[]);return <>{body}</>}\\n`;const layout=`import type { Metadata } from \\u0022next\\u0022;import \\u0022./globals.css\\u0022;export const metadata:Metadata={title:\\u0022Rohit Patil — Full Stack Web Developer\\u0022,description:\\u0022Rohit Patil is a full stack web developer building thoughtful, responsive digital experiences.\\u0022};export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang={\\u0022en\\u0022}><head><link rel={\\u0022preconnect\\u0022} href={\\u0022https://fonts.googleapis.com\\u0022}/><link rel={\\u0022preconnect\\u0022} href={\\u0022https://fonts.gstatic.com\\u0022} crossOrigin={\\u0022anonymous\\u0022}/><link href={\\u0022https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap\\u0022} rel={\\u0022stylesheet\\u0022}/></head><body>{children}</body></html>}`;fs.writeFileSync(`app/page.tsx`,page);fs.writeFileSync(`app/layout.tsx`,layout);fs.copyFileSync(`style.css`,`app/globals.css`);'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Embed portfolio content",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(`fs`);const html=fs.readFileSync(`index.html`,`utf8`);const body=html.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/i)[1].replace(/\\bclass=/g,`className=`).replace(/<span id=.year.><\\/span>/,`{new Date().getFullYear()}`);const page=`\\u0022use client\\u0022;\\nimport { useEffect } from \\u0022react\\u0022;\\nexport default function Home(){useEffect(()=>{const button=document.querySelector<HTMLButtonElement>(\\u0022.menu-toggle\\u0022);const nav=document.querySelector<HTMLElement>(\\u0022.nav-links\\u0022);if(button&&nav){const close=()=>{nav.classList.remove(\\u0022open\\u0022);button.setAttribute(\\u0022aria-expanded\\u0022,\\u0022false\\u0022);button.setAttribute(\\u0022aria-label\\u0022,\\u0022Open navigation\\u0022)};button.addEventListener(\\u0022click\\u0022,()=>{const open=button.getAttribute(\\u0022aria-expanded\\u0022)!==\\u0022true\\u0022;nav.classList.toggle(\\u0022open\\u0022,open);button.setAttribute(\\u0022aria-expanded\\u0022,String(open));button.setAttribute(\\u0022aria-label\\u0022,open?\\u0022Close navigation\\u0022:\\u0022Open navigation\\u0022)});nav.querySelectorAll(\\u0022a\\u0022).forEach(link=>link.addEventListener(\\u0022click\\u0022,close));document.addEventListener(\\u0022keydown\\u0022,event=>{if(event.key===\\u0022Escape\\u0022)close()})}const items=document.querySelectorAll(\\u0022.reveal\\u0022);if(\\u0022IntersectionObserver\\u0022 in window&&!window.matchMedia(\\u0022(prefers-reduced-motion: reduce)\\u0022).matches){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add(\\u0022visible\\u0022);observer.unobserve(entry.target)}}),{threshold:.12});items.forEach(item=>observer.observe(item));return()=>observer.disconnect()}items.forEach(item=>item.classList.add(\\u0022visible\\u0022))},[]);return <>${body}</>}\\n`;fs.writeFileSync(`app/page.tsx`,page);'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Install portfolio dependencies",
+			"type": "shell",
+			"command": "npm.cmd",
+			"args": [
+				"install",
+				"--no-audit",
+				"--no-fund"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build portfolio app",
+			"type": "shell",
+			"command": "npm.cmd",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Fix code-card JSX braces",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(`fs`);const file=`app/page.tsx`;const page=fs.readFileSync(file,`utf8`).replace(`developer = {</span>`,`developer = {String.fromCharCode(123)}</span>`).replace(`> };</span>`,`> {String.fromCharCode(125)};</span>`);fs.writeFileSync(file,page);'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Update typed routes config",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(`fs`);const file=`next.config.ts`;const source=fs.readFileSync(file,`utf8`).replace(`experimental: {\\n    typedRoutes: true,\\n  },`,`typedRoutes: true,`);fs.writeFileSync(file,source);'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Migrate typed route option",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(`fs`);const file=`next.config.ts`;const source=fs.readFileSync(file,`utf8`).replace(/experimental:\\s*\\{\\s*typedRoutes:\\s*true,\\s*\\},/`,`typedRoutes: true,`);fs.writeFileSync(file,source);'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Update Next config field",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"'const fs=require(`fs`);const file=`next.config.ts`;const source=fs.readFileSync(file,`utf8`).replace(/experimental:\\s*\\{\\s*typedRoutes:\\s*true,\\s*\\},/,`typedRoutes: true,`);fs.writeFileSync(file,source);'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}
