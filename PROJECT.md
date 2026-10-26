@@ -70,8 +70,9 @@ The repository includes a GitHub Actions workflow that builds and deploys the st
 
 1. Push the project to a GitHub repository named `rohit-patil-portfolio`.
 2. In that repository, open **Settings → Pages** and set the build and deployment source to **GitHub Actions**.
-3. Push to `main` (or run the **Deploy to GitHub Pages** workflow from the **Actions** tab).
-4. When the workflow succeeds, the site will be available at `https://rohit0177.github.io/rohit-patil-portfolio/`.
+3. Add the profile photo as `public/rohit-patil-profile.jpg` so it appears on the About page.
+4. Push to `main` (or run the **Deploy to GitHub Pages** workflow from the **Actions** tab).
+5. When the workflow succeeds, the site will be available at `https://rohit0177.github.io/rohit-patil-portfolio/`.
 
 GitHub Pages serves a static export. The contact form prepares an email in the visitor's email app; it does not require a server.
 
